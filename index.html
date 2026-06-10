@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>multisport - Athlete Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo-container" onclick="showPage('home-page')">
+                <div class="glitch-logo" data-text="multisport">multisport</div>
+            </div>
+            <div class="status-badge">LETS'GO!</div>
+        </header>
+
+        <div id="home-page" class="page active">
+            <div class="glass-card">
+                <div class="card-label">OUTDOOR RUN TRACKER</div>
+                <div id="distance-display" class="metric-value">0.00 <span class="metric-unit">KM</span></div>
+                <div class="gps-status-text" id="gps-status">GPS Status: Idle</div>
+                <div class="btn-group">
+                    <button class="btn-start" id="start-btn" onclick="startTracking()">START RUN</button>
+                    <button class="btn-stop" id="stop-btn" onclick="stopTracking()" disabled>STOP & SAVE</button>
+                </div>
+            </div>
+
+            <div>
+                <div class="section-title">ATHLETE FUELING (<span id="current-day-label">-</span>)</div>
+                <div class="glass-card">
+                    <div class="meal-selector">
+                        <button class="meal-btn active" id="btn-morning" onclick="switchMeal('morning')">MORNING</button>
+                        <button class="meal-btn" id="btn-afternoon" onclick="switchMeal('afternoon')">AFTERNOON</button>
+                        <button class="meal-btn" id="btn-evening" onclick="switchMeal('evening')">EVENING</button>
+                    </div>
+                    <div class="nutrition-content">
+                        <div class="card-label" id="meal-time-label">PRE-WORKOUT ENERGY</div>
+                        <h3 id="food-title">-</h3>
+                        <p id="food-desc">-</p>
+                        <div class="macro-info" id="macro-data">
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-start" style="margin-top: 10px; padding: 16px;" onclick="showPage('muscle-page')">
+                OPEN WORKOUT MENU →
+            </button>
+        </div>
+
+        <div id="muscle-page" class="page">
+            <div class="section-title">TARGET MUSCLE GROUP</div>
+            <div class="muscle-grid">
+                <div class="glass-card muscle-card full-body-card" onclick="selectMuscle('fullbody')" style="grid-column: span 2; border-color: rgba(255,255,255,0.4); background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);">
+                    <h3 style="color: #fff; letter-spacing: 2px;">⚡ FULL BODY</h3>
+                    <p>Complete High-Intensity Conditioning</p>
+                </div>
+                <div class="glass-card muscle-card" onclick="selectMuscle('chest')">
+                    <h3>CHEST</h3>
+                    <p>Push Ups & Dips</p>
+                </div>
+                <div class="glass-card muscle-card" onclick="selectMuscle('shoulders')">
+                    <h3>SHOULDERS</h3>
+                    <p>Raise & Press</p>
+                </div>
+                <div class="glass-card muscle-card" onclick="selectMuscle('legs')">
+                    <h3>LEGS</h3>
+                    <p>Squat & Lunges</p>
+                </div>
+                <div class="glass-card muscle-card" onclick="selectMuscle('back')">
+                    <h3>BACK</h3>
+                    <p>Pull Up & Row</p>
+                </div>
+            </div>
+            <button class="btn-stop" style="margin-top: 20px;" onclick="showPage('home-page')">← BACK</button>
+        </div>
+
+        <div id="timer-page" class="page">
+            <div class="glass-card timer-container">
+                <div class="card-label" id="workout-target-label">WORKOUT: CHEST</div>
+                
+                <div class="timer-circle">
+                    <span id="countdown-number">Ready</span>
+                    <span id="timer-unit-label" style="font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase;">Press Start</span>
+                </div>
+
+                <div class="exercise-detail">
+                    <h2 id="current-exercise-name">Push Up</h2>
+                    <div id="current-exercise-reps" class="reps-badge">Target: 15 Reps</div>
+                </div>
+
+                <div class="next-exercise-box">
+                    <span>NEXT:</span>
+                    <strong id="next-exercise-name">Diamond Push Up</strong>
+                </div>
+
+                <div class="btn-group" style="margin-top: 25px; width: 100%;">
+                    <button class="btn-start" id="workout-action-btn" onclick="triggerWorkoutState()">START WORKOUT</button>
+                    <button class="btn-stop" id="skip-exercise-btn" onclick="skipExercise()" style="display: none;">SKIP</button>
+                </div>
+                <button class="btn-stop" style="margin-top: 15px; width: 100%;" onclick="quitWorkout()">QUIT</button>
+            </div>
+        </div>
+
+        <div id="summary-page" class="page">
+            <div class="section-title" id="summary-title">SESSION SUMMARY</div>
+            
+            <div class="glass-card summary-card">
+                <div class="summary-main-stat">
+                    <div class="huge-counter" id="summary-primary-value">0.00</div>
+                    <div class="huge-label">
+                        <span id="summary-primary-unit">KM</span>
+                        <div class="summary-date" id="summary-timestamp">TODAY</div>
+                    </div>
+                </div>
+
+                <hr class="summary-divider">
+
+                <div class="summary-grid">
+                    <div>
+                        <div class="sum-label">TOTAL TIME</div>
+                        <div class="sum-value" id="sum-total-time">00:00</div>
+                    </div>
+                    <div>
+                        <div class="sum-label">STATUS</div>
+                        <div class="sum-value" id="sum-total-rest" style="font-size: 16px; text-transform: uppercase;">COMPLETED</div>
+                    </div>
+                </div>
+
+                <div class="set-breakdown">
+                    <div class="sum-label" id="sum-split-label">TRACKED TARGET</div>
+                    <div class="sum-value" id="sum-sets-breakdown">CHEST MODE</div>
+                </div>
+
+                <div class="duration-metric">
+                    <div class="sum-label" id="sum-secondary-label">PERFORMANCE METRIC</div>
+                    <div class="sum-value" id="sum-secondary-value">0.00s</div>
+                </div>
+
+                <div class="summary-footer-row">
+                    <div class="weather-box">
+                        <div class="sum-label">TEMPERATURE</div>
+                        <div class="env-val">☁️ 28°C</div>
+                        <div class="sum-label" style="margin-top: 8px;">HUMIDITY</div>
+                        <div class="env-val">82%</div>
+                    </div>
+                    
+                    <div class="map-container">
+                        <div class="map-grid-lines"></div>
+                        <div class="map-dot"></div>
+                        <div class="map-label">MAPS</div>
+                    </div>
+                </div>
+
+                <div class="health-sync">
+                    ❤️ Added to Performance Ledger
+                </div>
+
+                <div class="share-row">
+                    <button class="icon-btn" title="Share" onclick="alert('Workout link copied to clipboard!')">
+                        <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <button class="btn-start" style="margin-top: 15px; padding: 16px;" onclick="showPage('home-page')">
+                SAVE & RETURN
+            </button>
+        </div>
+
+        <div id="progress-page" class="page">
+            <div class="section-title">PROGRESS HISTORY</div>
+            
+            <div class="category-switcher">
+                <button id="cat-run-btn" class="category-btn active" onclick="switchProgressCategory('running')">RUNNING</button>
+                <button id="cat-work-btn" class="category-btn" onclick="switchProgressCategory('workout')">WORKOUT</button>
+            </div>
+
+            <div id="running-progress-list" class="progress-list active">
+                </div>
+
+            <div id="workout-progress-list" class="progress-list">
+                </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div id="nav-home" class="nav-item active" onclick="showPage('home-page')">
+                <svg class="nav-svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                HOME
+            </div>
+            <div id="nav-progress" class="nav-item" onclick="showPage('progress-page')">
+                <svg class="nav-svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                PROGRESS
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- DYNAMIC DIET SCHEDULE BASED ON SYSTEM DAY ---
+        const scheduleNutrisi = {
+            MonWed: {
+                morning: { label: "PRE-WORKOUT ENERGY", title: "Oatmeal & Banana Slices", desc: "High complex carbohydrates to fill muscle glycogen before a heavy work session.", macro: "<span>Carbs: 65g</span> <span>Protein: 12g</span> <span>Calories: 420 Kcal</span>" },
+                afternoon: { label: "POST-WORKOUT RECOVERY", title: "Grilled Chicken & Brown Rice", desc: "Lean proteins combined with clean carbs to rebuild torn muscle fibers immediately.", macro: "<span>Carbs: 50g</span> <span>Protein: 40g</span> <span>Calories: 550 Kcal</span>" },
+                evening: { label: "OVERNIGHT MUSCLE REPAIR", title: "Salmon & Mashed Potatoes", desc: "Rich in Omega-3 fatty acids and slow-digesting proteins to maximize night synthesis.", macro: "<span>Carbs: 30g</span> <span>Protein: 35g</span> <span>Calories: 380 Kcal</span>" }
+            },
+            ThuSat: {
+                morning: { label: "STAMINA BOOSTER", title: "Whole Wheat Toast & Peanut Butter", desc: "Healthy fats and instant energy source to maintain running endurance.", macro: "<span>Carbs: 40g</span> <span>Protein: 15g</span> <span>Calories: 390 Kcal</span>" },
+                afternoon: { label: "MUSCLE FUEL", title: "Beef Stir-Fry & Quinoa", desc: "High iron helps blood oxygen circulation during systemic endurance sessions.", macro: "<span>Carbs: 45g</span> <span>Protein: 38g</span> <span>Calories: 580 Kcal</span>" },
+                evening: { label: "ANABOLIC STATE", title: "Boiled Eggs & Protein Greens", desc: "Pure amino acid intake without excess fat to keep muscle mass dense.", macro: "<span>Carbs: 10g</span> <span>Protein: 28g</span> <span>Calories: 290 Kcal</span>" }
+            },
+            Sunday: {
+                morning: { label: "FULL RECOVERY DIET", title: "Avocado Smoothie & Whey", desc: "Focus on micronutrients and healthy fats to relieve joint inflammation post-training.", macro: "<span>Carbs: 25g</span> <span>Protein: 30g</span> <span>Calories: 350 Kcal</span>" },
+                afternoon: { label: "RELOAD SESSION", title: "Whole Wheat Pasta & Tuna", desc: "Refuels the body's energy tanks periodically without overloading digestion.", macro: "<span>Carbs: 70g</span> <span>Protein: 32g</span> <span>Calories: 510 Kcal</span>" },
+                evening: { label: "RESTING REPAIR", title: "Casein Shake & Almond Nuts", desc: "Slow-absorbing protein to prevent muscle catabolism during rest days.", macro: "<span>Carbs: 15g</span> <span>Protein: 25g</span> <span>Calories: 260 Kcal</span>" }
+            }
+        };
+
+        let currentActiveMeal = 'morning';
+        
+        function initFuelingDay() {
+            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const currentDayIndex = new Date().getDay();
+            const namaHari = dayNames[currentDayIndex];
+            
+            document.getElementById('current-day-label').innerText = namaHari.toUpperCase();
+            
+            let keyHari = "MonWed";
+            if (currentDayIndex === 0) keyHari = "Sunday";
+            else if (currentDayIndex >= 4 && currentDayIndex <= 6) keyHari = "ThuSat";
+
+            window.currentDayMenu = scheduleNutrisi[keyHari];
+            switchMeal(currentActiveMeal);
+        }
+
+        function switchMeal(meal) {
+            currentActiveMeal = meal;
+            document.querySelectorAll('.meal-btn').forEach(btn => btn.classList.remove('active'));
+            if(document.getElementById(`btn-${meal}`)) {
+                document.getElementById(`btn-${meal}`).classList.add('active');
+            }
+            const data = window.currentDayMenu[meal];
+            document.getElementById('meal-time-label').innerText = data.label;
+            document.getElementById('food-title').innerText = data.title;
+            document.getElementById('food-desc').innerText = data.desc;
+            document.getElementById('macro-data').innerHTML = data.macro;
+        }
+
+        // --- PROGRESS SYSTEM DATABASE ---
+        let dbProgress = {
+            running: [
+                { id: 1, type: 'running', title: 'Outdoor Run', date: 'Jun 08, 2026', main: '4.15 KM', sub: 'Pace 5:08 /km' }
+            ],
+            workout: [
+                { id: 2, type: 'workout', title: 'Full Body Routine', date: 'Jun 09, 2026', main: 'Completed', sub: '10 Movements Done' }
+            ]
+        };
+
+        function renderProgressLists() {
+            const runList = document.getElementById('running-progress-list');
+            const workList = document.getElementById('workout-progress-list');
+            
+            runList.innerHTML = dbProgress.running.length ? '' : '<p style="font-size:12px;opacity:0.4;padding:10px;">No running history found.</p>';
+            workList.innerHTML = dbProgress.workout.length ? '' : '<p style="font-size:12px;opacity:0.4;padding:10px;">No workout history found.</p>';
+
+            dbProgress.running.forEach(item => { runList.innerHTML += createProgressItemHTML(item); });
+            dbProgress.workout.forEach(item => { workList.innerHTML += createProgressItemHTML(item); });
+        }
+
+        function createProgressItemHTML(item) {
+            const icon = item.type === 'running' ? '🏃‍♂️' : '💪';
+            return `
+                <div class="progress-item" style="position:relative;">
+                    <div class="progress-icon">${icon}</div>
+                    <div class="progress-meta">
+                        <div class="progress-title">${item.title}</div>
+                        <div class="progress-date">${item.date}</div>
+                    </div>
+                    <div class="progress-stats" style="margin-right:25px;">
+                        <div class="progress-main-stat">${item.main}</div>
+                        <div class="progress-sub-stat">${item.sub}</div>
+                    </div>
+                    <div style="position:absolute; right:12px; top:30%; padding:10px; cursor:pointer; z-index:150;" onclick="toggleItemMenu(event, ${item.id})">
+                        <span style="font-size:18px; color:rgba(255,255,255,0.4); display:block; pointer-events:none;">⋮</span>
+                        <div id="dropdown-${item.id}" class="glass-card" style="display:none; position:absolute; right:0; top:30px; z-index:250; padding:6px; gap:2px; flex-direction:column; min-width:95px; border-color:rgba(255,255,255,0.2); background:#0c0c0c;">
+                            <div style="font-size:11px; font-weight:700; color:#ff4444; padding:8px; text-align:left;" onclick="removeItemProgress(event, ${item.id}, '${item.type}')">REMOVE</div>
+                            <div style="font-size:11px; font-weight:700; color:#ffffff; padding:8px; border-top:1px solid rgba(255,255,255,0.08); text-align:left;" onclick="alert('Activity shared successfully!')">SHARE</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleItemMenu(e, id) {
+            e.stopPropagation();
+            const el = document.getElementById(`dropdown-${id}`);
+            const currentDisplay = el.style.display;
+            document.querySelectorAll('[id^="dropdown-"]').forEach(d => d.style.display = 'none');
+            el.style.display = (currentDisplay === 'flex') ? 'none' : 'flex';
+        }
+
+        function removeItemProgress(e, id, type) {
+            e.stopPropagation();
+            if(confirm("Permanently delete this activity log?")) {
+                dbProgress[type] = dbProgress[type].filter(item => item.id !== id);
+                renderProgressLists();
+            }
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) targetPage.classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (pageId === 'home-page' || pageId === 'muscle-page' || pageId === 'timer-page' || pageId === 'summary-page') {
+                document.getElementById('nav-home').classList.add('active');
+            } else if (pageId === 'progress-page') {
+                document.getElementById('nav-progress').classList.add('active');
+            }
+            document.querySelectorAll('[id^="dropdown-"]').forEach(d => d.style.display = 'none');
+        }
+
+        // --- EXTENDED WORKOUT DATA (MINIMUM 10 MOVEMENTS EACH) ---
+        const dataWorkout = {
+            fullbody: [
+                {n:"Jumping Jacks", repsText:"30 Reps", d:30},
+                {n:"Bodyweight Squats", repsText:"20 Reps", d:40},
+                {n:"Standard Push Ups", repsText:"15 Reps", d:30},
+                {n:"Mountain Climbers", repsText:"30 Reps", d:30},
+                {n:"Reverse Lunges", repsText:"20 Reps", d:40},
+                {n:"Burpees", repsText:"10 Reps", d:30},
+                {n:"Plank to Push Up", repsText:"12 Reps", d:35},
+                {n:"Bicycle Crunches", repsText:"25 Reps", d:30},
+                {n:"Jump Squats", repsText:"15 Reps", d:30},
+                {n:"Forearm Plank", repsText:"Hold 45s", d:45}
+            ],
+            chest: [
+                {n:"Standard Push Up", repsText:"15 Reps", d:30},
+                {n:"Diamond Push Up", repsText:"12 Reps", d:30},
+                {n:"Wide Push Up", repsText:"15 Reps", d:30},
+                {n:"Decline Push Up", repsText:"12 Reps", d:35},
+                {n:"Incline Push Up", repsText:"15 Reps", d:30},
+                {n:"Chest Dips", repsText:"10 Reps", d:40},
+                {n:"Staggered Push Up", repsText:"12 Reps", d:30},
+                {n:"Archer Push Up", repsText:"8 Reps", d:40},
+                {n:"Hand Release Push Up", repsText:"12 Reps", d:35},
+                {n:"Plank Hold Tap", repsText:"20 Reps", d:30}
+            ],
+            shoulders: [
+                {n:"Pike Push Up", repsText:"12 Reps", d:35},
+                {n:"Lateral Raise", repsText:"20 Reps", d:25},
+                {n:"Overhead Press", repsText:"15 Reps", d:30},
+                {n:"Front Raise", repsText:"15 Reps", d:25},
+                {n:"Rear Delt Fly", repsText:"18 Reps", d:30},
+                {n:"Shoulder Tap Plank", repsText:"24 Reps", d:30},
+                {n:"Dolphin Push Up", repsText:"10 Reps", d:35},
+                {n:"Prone Y-Raise", repsText:"15 Reps", d:30},
+                {n:"Scapula Shrugs", repsText:"20 Reps", d:25},
+                {n:"Hold Overhead Dumbbell", repsText:"Hold 30s", d:30}
+            ],
+            legs: [
+                {n:"Bodyweight Squat", repsText:"25 Reps", d:40},
+                {n:"Jump Squat", repsText:"15 Reps", d:25},
+                {n:"Forward Lunges", repsText:"20 Reps", d:35},
+                {n:"Bulgarian Split Squat", repsText:"12 Reps Each", d:40},
+                {n:"Sumo Squat", repsText:"20 Reps", d:35},
+                {n:"Calf Raises", repsText:"30 Reps", d:30},
+                {n:"Glute Bridges", repsText:"25 Reps", d:30},
+                {n:"Side Lunges", repsText:"20 Reps", d:35},
+                {n:"Wall Sit", repsText:"Hold 45s", d:45},
+                {n:"Single Leg Deadlift", repsText:"12 Reps Each", d:40}
+            ],
+            back: [
+                {n:"Pull Up", repsText:"8 Reps", d:35},
+                {n:"Inverted Row", repsText:"12 Reps", d:30},
+                {n:"Chin Up", repsText:"8 Reps", d:35},
+                {n:"Superman Hold", repsText:"Hold 30s", d:30},
+                {n:"Bent Over Row", repsText:"15 Reps", d:35},
+                {n:"Scapula Pull Up", repsText:"12 Reps", d:25},
+                {n:"Lat Pulldown Band", repsText:"20 Reps", d:30},
+                {n:"Prone Cobra", repsText:"Hold 45s", d:45},
+                {n:"Hyperextension", repsText:"15 Reps", d:30},
+                {n:"Deadhang Lock", repsText:"Hold 40s", d:40}
+            ]
+        };
+
+        let currentExercises = [];
+        let currentIdx = 0;
+        let timerInterval = null;
+        let timeLeft = 0;
+        let isRunning = false;
+        let selectedMuscleGroup = '';
+        let workoutStartTime = null;
+
+        function selectMuscle(otot) {
+            selectedMuscleGroup = otot;
+            currentExercises = dataWorkout[otot];
+            currentIdx = 0;
+            isRunning = false;
+            
+            let labelText = otot === 'fullbody' ? "WORKOUT: FULL BODY" : `WORKOUT: ${otot.toUpperCase()}`;
+            document.getElementById('workout-target-label').innerText = labelText;
+            document.getElementById('countdown-number').innerText = "Ready";
+            document.getElementById('timer-unit-label').innerText = "Press Start";
+            
+            const actionBtn = document.getElementById('workout-action-btn');
+            actionBtn.style.display = "block";
+            actionBtn.innerText = "START WORKOUT";
+            document.getElementById('skip-exercise-btn').style.display = "none";
+
+            document.getElementById('current-exercise-name').innerText = currentExercises[0].n;
+            document.getElementById('current-exercise-reps').innerText = `Target: ${currentExercises[0].repsText}`;
+            document.getElementById('next-exercise-name').innerText = currentExercises[1] ? currentExercises[1].n : "End of session";
+
+            showPage('timer-page');
+        }
+
+        function triggerWorkoutState() {
+            if (!isRunning) {
+                isRunning = true;
+                workoutStartTime = new Date();
+                document.getElementById('workout-action-btn').style.display = "none";
+                document.getElementById('skip-exercise-btn').style.display = "block";
+                document.getElementById('timer-unit-label').innerText = "SEC";
+                runExerciseEngine();
+            }
+        }
+
+        function runExerciseEngine() {
+            if (currentIdx >= currentExercises.length) {
+                endWorkoutSession();
+                return;
+            }
+
+            const active = currentExercises[currentIdx];
+            document.getElementById('current-exercise-name').innerText = active.n;
+            document.getElementById('current-exercise-reps').innerText = `Target: ${active.repsText}`;
+            document.getElementById('next-exercise-name').innerText = currentExercises[currentIdx + 1] ? currentExercises[currentIdx + 1].n : "End of session";
+
+            timeLeft = active.d;
+            document.getElementById('countdown-number').innerText = timeLeft;
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('countdown-number').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    currentIdx++;
+                    runExerciseEngine();
+                }
+            }, 1000);
+        }
+
+        function skipExercise() {
+            clearInterval(timerInterval);
+            currentIdx++;
+            runExerciseEngine();
+        }
+
+        function endWorkoutSession() {
+            clearInterval(timerInterval);
+            const now = new Date();
+            
+            const diffMs = now - workoutStartTime;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffSecs = Math.floor((diffMs % 60000) / 1000);
+            const stringDuration = `${String(diffMins).padStart(2, '0')}:${String(diffSecs).padStart(2, '0')}`;
+
+            const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+            const timestampString = `${months[now.getMonth()]} ${String(now.getDate()).padStart(2,'0')}<br>${String(workoutStartTime.getHours()).padStart(2,'0')}:${String(workoutStartTime.getMinutes()).padStart(2,'0')} – ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            
+            let displayGroup = selectedMuscleGroup === 'fullbody' ? "FULL BODY" : selectedMuscleGroup.toUpperCase();
+
+            document.getElementById('summary-title').innerText = "WORKOUT SUMMARY";
+            document.getElementById('summary-primary-value').innerText = "DONE"; 
+            document.getElementById('summary-primary-unit').innerText = "circuit finished";
+            document.getElementById('summary-timestamp').innerHTML = timestampString;
+            
+            document.getElementById('sum-total-time').innerText = stringDuration;
+            document.getElementById('sum-total-rest').innerText = "SUCCESS";
+            document.getElementById('sum-split-label').innerText = "TRACKED TARGET GROUP";
+            document.getElementById('sum-sets-breakdown').innerText = `${displayGroup} CIRCUITS`;
+            document.getElementById('sum-secondary-label').innerText = "TOTAL EXERCISES DONE";
+            document.getElementById('sum-secondary-value').innerText = `${currentExercises.length} Movements`;
+
+            dbProgress.workout.unshift({
+                id: Date.now(),
+                type: 'workout',
+                title: `${selectedMuscleGroup === 'fullbody' ? 'Full Body' : selectedMuscleGroup.charAt(0).toUpperCase() + selectedMuscleGroup.slice(1)} Session`,
+                date: `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`,
+                main: 'Completed',
+                sub: `${currentExercises.length} Exercises`
+            });
+            renderProgressLists();
+
+            showPage('summary-page');
+        }
+
+        function quitWorkout() {
+            if (confirm("Cancel session? Current realtime tracked data will be lost.")) {
+                clearInterval(timerInterval);
+                showPage('home-page');
+            }
+        }
+
+        // --- REALTIME GPS RUN TRACKING ---
+        let watchId = null; let totalDistance = 0; let lastPosition = null; let runStartTime = null; let runTimerInterval = null; let totalSecondsRun = 0;
+
+        function startTracking() {
+            if (!navigator.geolocation) { alert("GPS hardware not supported by this environment."); return; }
+            runStartTime = new Date();
+            totalDistance = 0;
+            totalSecondsRun = 0;
+            
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('stop-btn').disabled = false;
+            document.getElementById('gps-status').innerText = "GPS Tracking Active (00:00)";
+            document.getElementById('gps-status').style.color = "#00ff00";
+
+            runTimerInterval = setInterval(() => {
+                totalSecondsRun++;
+                const m = Math.floor(totalSecondsRun / 60);
+                const s = totalSecondsRun % 60;
+                document.getElementById('gps-status').innerText = `GPS Tracking Active (${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')})`;
+            }, 1000);
+
+            watchId = navigator.geolocation.watchPosition((p) => {
+                const { latitude, longitude } = p.coords;
+                if (lastPosition) {
+                    const stepDistance = calculateDistance(lastPosition.latitude, lastPosition.longitude, latitude, longitude);
+                    totalDistance += stepDistance;
+                    document.getElementById('distance-display').innerHTML = `${totalDistance.toFixed(2)} <span class="metric-unit">KM</span>`;
+                }
+                lastPosition = { latitude, longitude };
+            }, (e) => {}, { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 });
+        }
+
+        function stopTracking() {
+            if (watchId !== null || runTimerInterval !== null) {
+                navigator.geolocation.clearWatch(watchId);
+                clearInterval(runTimerInterval);
+                watchId = null; lastPosition = null;
+                
+                document.getElementById('start-btn').disabled = false;
+                document.getElementById('stop-btn').disabled = true;
+                document.getElementById('gps-status').innerText = "GPS Status: Idle";
+                document.getElementById('gps-status').style.color = "rgba(255,255,255,0.4)";
+
+                const now = new Date();
+                const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+                const formatTime = d => String(d.getHours()).padStart(2,'0') + ":" + String(d.getMinutes()).padStart(2,'0');
+
+                const runMins = Math.floor(totalSecondsRun / 60);
+                const runSecs = totalSecondsRun % 60;
+                const finalDurationText = `${String(runMins).padStart(2,'0')}:${String(runSecs).padStart(2,'0')}`;
+
+                let paceText = "0:00 /km";
+                if(totalDistance > 0) {
+                    const decimalMinutes = totalSecondsRun / 60;
+                    const paceDecimal = decimalMinutes / totalDistance;
+                    const paceMins = Math.floor(paceDecimal);
+                    const paceSecs = Math.floor((paceDecimal - paceMins) * 60);
+                    paceText = `${paceMins}:${String(paceSecs).padStart(2,'0')} /km`;
+                }
+
+                const finalDistanceStr = totalDistance.toFixed(2);
+
+                document.getElementById('summary-title').innerText = "RUNNING SUMMARY";
+                document.getElementById('summary-primary-value').innerText = finalDistanceStr;
+                document.getElementById('summary-primary-unit').innerText = "KM RUN";
+                document.getElementById('summary-timestamp').innerHTML = `${months[now.getMonth()]} ${String(now.getDate()).padStart(2,'0')}<br>${formatTime(runStartTime)} – ${formatTime(now)}`;
+                
+                document.getElementById('sum-total-time').innerText = finalDurationText;
+                document.getElementById('sum-total-rest').innerText = "SAVED";
+                document.getElementById('sum-split-label').innerText = "GPS INTERFACE DEVICE";
+                document.getElementById('sum-sets-breakdown').innerText = "HARDWARE LIVE DETECT";
+                document.getElementById('sum-secondary-label').innerText = "REALTIME PACE ANALYSIS";
+                document.getElementById('sum-secondary-value').innerText = paceText;
+
+                dbProgress.running.unshift({
+                    id: Date.now(),
+                    type: 'running',
+                    title: 'Outdoor Run Session',
+                    date: `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`,
+                    main: `${finalDistanceStr} KM`,
+                    sub: `Pace ${paceText}`
+                });
+                renderProgressLists();
+                
+                document.getElementById('distance-display').innerHTML = `0.00 <span class="metric-unit">KM</span>`;
+                showPage('summary-page');
+            }
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; const dLat = (lat2 - lat1) * Math.PI / 180; const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+        }
+
+        function switchProgressCategory(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.progress-list').forEach(list => list.classList.remove('active'));
+
+            if(category === 'running') {
+                document.getElementById('cat-run-btn').classList.add('active');
+                document.getElementById('running-progress-list').classList.add('active');
+            } else if(category === 'workout') {
+                document.getElementById('cat-work-btn').classList.add('active');
+                document.getElementById('workout-progress-list').classList.add('active');
+            }
+        }
+
+        window.addEventListener('click', function() {
+            document.querySelectorAll('[id^="dropdown-"]').forEach(d => d.style.display = 'none');
+        });
+
+        // INIT SEED
+        initFuelingDay();
+        renderProgressLists();
+    </script>
+</body>
+</html>

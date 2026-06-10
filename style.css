@@ -1,0 +1,269 @@
+/* ==================== GLOBAL STYLES & RESET ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+body {
+    background: #000000;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-image: 
+        radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.08) 0%, transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+}
+
+/* SMARTPHONE MOCKUP FRAME */
+.app-container {
+    width: 100%;
+    max-width: 412px;
+    height: 860px;
+    background: rgba(10, 10, 10, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 44px;
+    padding: 24px 24px 95px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    overflow-y: auto;
+    backdrop-filter: blur(25px);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.95);
+    position: relative;
+}
+
+.app-container::-webkit-scrollbar { width: 3px; }
+.app-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+
+/* LAYOUT STATES ENGINE */
+.page { display: none; flex-direction: column; gap: 20px; width: 100%; }
+.page.active { display: flex; }
+
+/* HEADER MODULE */
+.app-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px; }
+.status-badge { background: #ffffff; color: #000000; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+
+/* ==================== ANIMASI GLITCH WAVE LOGO ==================== */
+.logo-container { cursor: pointer; display: inline-block; }
+.glitch-logo {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    color: #ffffff;
+    position: relative;
+    text-transform: lowercase;
+    animation: waveGlitchMotion 4s infinite ease-in-out;
+}
+.glitch-logo::before, .glitch-logo::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000;
+}
+.glitch-logo::before {
+    left: 1px; text-shadow: -1px 0 rgba(255,255,255,0.7);
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitchLineAnim 2s infinite linear alternate-reverse;
+}
+.glitch-logo::after {
+    left: -1px; text-shadow: -1px 0 rgba(255,255,255,0.4);
+    clip: rect(12px, 450px, 32px, 0);
+    animation: glitchLineAnim2 3s infinite linear alternate-reverse;
+}
+
+@keyframes waveGlitchMotion {
+    0%, 100% { transform: translateY(0) scaleY(1); filter: blur(0); }
+    30% { transform: translateY(-2px) scaleY(1.03) skewX(1deg); filter: contrast(1.2); }
+    35% { transform: translateY(1px) skewX(-2deg); }
+    70% { transform: translateY(2px) scaleY(0.98); }
+    72% { transform: skewX(5deg); filter: blur(0.3px); }
+    74% { transform: skewX(0deg); filter: blur(0); }
+}
+@keyframes glitchLineAnim {
+    0% { clip: rect(15px, 9999px, 66px, 0); }
+    100% { clip: rect(34px, 9999px, 55px, 0); }
+}
+@keyframes glitchLineAnim2 {
+    0% { clip: rect(70px, 9999px, 105px, 0); }
+    100% { clip: rect(12px, 9999px, 85px, 0); }
+}
+
+/* CARDS GLASSMORPHISM */
+.glass-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 24px;
+    padding: 22px;
+}
+
+.card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255, 255, 255, 0.45); margin-bottom: 6px; font-weight: 700; }
+.section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.9); }
+.metric-value { font-size: 42px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.1; }
+.metric-unit { font-size: 18px; color: rgba(255, 255, 255, 0.5); font-weight: 400; }
+.gps-status-text { margin-top: 10px; font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 700; }
+
+/* CONTROLS & BUTTONS */
+.btn-group { display: flex; gap: 12px; }
+button { flex: 1; padding: 14px; border-radius: 16px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-size: 13px; letter-spacing: 0.5px; }
+.btn-start { background: #ffffff; color: #000000; text-transform: uppercase; }
+.btn-start:hover { background: rgba(255, 255, 255, 0.88); transform: translateY(-1px); }
+.btn-start:disabled { background: rgba(255,255,255,0.2); color: rgba(0,0,0,0.5); cursor: not-allowed; transform: none; }
+.btn-stop { background: rgba(255, 255, 255, 0.07); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.18); text-transform: uppercase; }
+.btn-stop:hover { background: rgba(255, 255, 255, 0.15); }
+.btn-stop:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* DIET COMPONENT */
+.meal-selector { display: flex; gap: 6px; margin-bottom: 18px; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 14px; }
+.meal-btn { background: transparent; color: rgba(255, 255, 255, 0.5); border: none; padding: 8px 10px; border-radius: 10px; font-size: 11px; flex: 1; }
+.meal-btn.active { background: #ffffff; color: #000000; font-weight: 700; }
+.nutrition-content h3 { font-size: 19px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.5px; }
+.nutrition-content p { font-size: 13px; color: rgba(255, 255, 255, 0.55); line-height: 1.45; margin-bottom: 14px; }
+.macro-info { display: flex; gap: 10px; }
+.macro-info span { background: rgba(255, 255, 255, 0.08); padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; border: 1px solid rgba(255,255,255,0.05); }
+
+/* WORKOUT MENUS */
+.muscle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.muscle-card { cursor: pointer; text-align: center; padding: 28px 12px; display: flex; flex-direction: column; gap: 4px; border-color: rgba(255,255,255,0.08); }
+.muscle-card:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255,255,255,0.4); }
+.muscle-card h3 { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+.muscle-card p { font-size: 12px; color: rgba(255, 255, 255, 0.4); }
+
+/* WORKOUT TRAINER SCREEN */
+.timer-container { display: flex; flex-direction: column; align-items: center; padding: 35px 20px; }
+.timer-circle {
+    width: 190px; height: 190px; border-radius: 50%;
+    border: 3px dashed rgba(255, 255, 255, 0.2);
+    border-top: 3px solid #ffffff;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    margin: 24px 0;
+    animation: rotationSpinSlow 24s infinite linear;
+}
+.timer-circle span { animation: keepTextStill 24s infinite linear; }
+#countdown-number { font-size: 56px; font-weight: 700; line-height: 1; letter-spacing: -2px; }
+.exercise-detail h2 { font-size: 26px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.5px; }
+.reps-badge { display: inline-block; background: #ffffff; color: #000000; padding: 6px 16px; border-radius: 30px; font-size: 13px; font-weight: 700; }
+.next-exercise-box {
+    margin-top: 30px; width: 100%; padding: 14px 18px;
+    background: rgba(0, 0, 0, 0.2); border-radius: 16px;
+    font-size: 12px; display: flex; justify-content: space-between; align-items: center;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.next-exercise-box span { color: rgba(255, 255, 255, 0.4); font-weight: 700; }
+
+@keyframes rotationSpinSlow { 100% { transform: rotate(360deg); } }
+@keyframes keepTextStill { 100% { transform: rotate(-360deg); } }
+
+/* PERFORMANCE RESULTS (SCREEN 4) */
+.summary-card { background: rgba(15, 15, 15, 0.95); border: 1px solid rgba(255,255,255,0.15); padding: 24px; display: flex; flex-direction: column; gap: 18px; }
+.summary-main-stat { display: flex; align-items: flex-start; gap: 14px; margin-top: 5px; }
+.huge-counter { font-size: 76px; font-weight: 700; line-height: 0.85; letter-spacing: -4px; }
+.huge-label { display: flex; flex-direction: column; justify-content: space-between; height: 65px; }
+.huge-label span { font-size: 20px; font-weight: 700; color: #ffffff; line-height: 1; }
+.summary-date { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 700; line-height: 1.3; }
+
+.summary-divider { border: none; height: 1px; background: rgba(255,255,255,0.1); width: 100%; margin: 4px 0; }
+.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.sum-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+.sum-value { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+
+.set-breakdown .sum-value { font-size: 20px; word-spacing: 2px; margin-top: 2px; }
+.duration-metric .sum-value { font-size: 26px; }
+
+.summary-footer-row { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 5px; }
+.env-val { font-size: 18px; font-weight: 700; }
+
+.map-container {
+    width: 110px; height: 110px; border-radius: 16px;
+    background: #111111; border: 1px solid rgba(255,255,255,0.1);
+    position: relative; overflow: hidden;
+}
+.map-grid-lines {
+    width: 100%; height: 100%;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 16px 16px;
+}
+.map-dot {
+    width: 12px; height: 12px; background: #ffffff;
+    border-radius: 50%; position: absolute;
+    top: 45%; left: 55%; box-shadow: 0 0 12px #ffffff;
+}
+.map-label { position: absolute; bottom: 6px; left: 8px; font-size: 9px; color: rgba(255,255,255,0.3); font-weight: 700; }
+
+.health-sync { font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 700; display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+
+/* SHARE AREA VECTOR MONOCHROME DESIGN */
+.share-row { display: flex; justify-content: flex-end; gap: 12px; margin-top: -25px; }
+.icon-btn { 
+    width: 38px; height: 38px; border-radius: 50%; 
+    background: transparent; border: 1px solid rgba(255,255,255,0.25); 
+    display: flex; align-items: center; justify-content: center; 
+    cursor: pointer; transition: all 0.2s ease;
+}
+.icon-btn:hover { background: #ffffff; border-color: #ffffff; }
+.icon-btn:hover svg { fill: #000000; }
+.icon-btn svg { 
+    width: 16px; height: 16px; 
+    fill: #ffffff; transition: fill 0.2s ease;
+}
+
+/* PROGRESS PANEL */
+.category-switcher { display: flex; gap: 10px; margin-bottom: 10px; }
+.category-btn { background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.5); padding: 12px; border-radius: 14px; font-size: 12px; flex: 1; border: 1px solid rgba(255,255,255,0.08); text-transform: uppercase;}
+.category-btn.active { background: #ffffff; color: #000000; font-weight: 700; border: none; }
+
+.progress-list { display: none; flex-direction: column; gap: 12px; }
+.progress-list.active { display: flex; }
+
+.progress-item {
+    display: grid; grid-template-columns: 45px 1fr 1fr; align-items: center;
+    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px; padding: 14px;
+}
+.progress-icon { font-size: 22px; text-align: left; }
+.progress-meta { display: flex; flex-direction: column; }
+.progress-title { font-size: 14px; font-weight: 700; }
+.progress-date { font-size: 11px; color: rgba(255, 255, 255, 0.4); }
+.progress-stats { text-align: right; }
+.progress-main-stat { font-size: 16px; font-weight: 700; }
+.progress-sub-stat { font-size: 11px; color: rgba(255, 255, 255, 0.4); }
+
+/* FIXED BOTTOM NAVIGATION BAR (MURNI HITAM PUTIH ACTIVE STATE) */
+.bottom-nav { 
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 75px; 
+    background: #0a0a0a; border-top: 1px solid rgba(255,255,255,0.1); 
+    display: flex; justify-content: space-around; align-items: center; 
+    border-radius: 0 0 44px 44px; backdrop-filter: blur(20px); z-index: 100;
+}
+.nav-item { 
+    font-size: 10px; color: rgba(255,255,255,0.4); 
+    text-transform: uppercase; letter-spacing: 1px; 
+    cursor: pointer; text-align: center; width: 50%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    transition: color 0.2s ease;
+}
+/* Active state murni teks putih tebal, sisanya redup abu-abu */
+.nav-item.active { color: #ffffff; font-weight: 700; }
+.nav-icon { font-size: 18px; display: block; margin-bottom: 4px; }
+/* COMPACT VECTOR NAVIGATION GRAPHICS */
+.nav-svg {
+    width: 20px;
+    height: 20px;
+    fill: rgba(255, 255, 255, 0.4);
+    margin-bottom: 5px;
+    transition: fill 0.2s ease;
+}
+
+/* Lights up white only when parent container is toggled active */
+.nav-item.active .nav-svg {
+    fill: #ffffff;
+}
